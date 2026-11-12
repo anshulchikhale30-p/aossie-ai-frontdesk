@@ -1,11 +1,12 @@
-# AI Front Desk — delivery outcomes
+# AOSSIE Agent — delivery outcomes
 
-- [x] **Provider operations overview:** The provider-facing interface presents shared operational signal, including handled conversations, pending handoffs, confirmed appointments, automation health, an attention queue, and upcoming schedule items.
-- [x] **Customer and provider interaction surfaces:** The product exposes one shared provider console and a customer conversation preview. The customer view only shows the customer’s own appointment context and provider information made available in the conversation.
-- [x] **Inbox and human handoff:** The inbox shows customer conversations, preserves the original question and thread context, labels pending human judgment, and lets staff reply, mark handled, or escalate without blocking other conversations.
-- [x] **Availability change safety:** Calendar changes present customer-selectable replacement times and do not silently move or cancel the existing appointment. The customer view lets the customer choose and confirm a replacement.
-- [x] **Text-only operational knowledge:** The knowledge view allows plain-text operational entries with scope and validity metadata. It does not present file upload or repository ingestion as supported behavior.
-- [x] **Channel operations:** The channels view makes WhatsApp Business, Telegram, and Discord integration states explicit, including connection/permission caveats and native platform interaction notes.
-- [x] **Notification and broadcast states:** The overview and settings surfaces show provider-configured reminder timing, attendance confirmation, and a provider-requested broadcast flow without implying that adding knowledge automatically broadcasts it.
-- [ ] **Production account isolation:** Replace local demo state with authenticated provider/staff roles, verified customer identity, and server/database ownership boundaries so each service-provider account is isolated.
-- [ ] **Production adapters and delivery:** Add real channel adapters, durable appointments/knowledge/escalations, scheduled reminders, provider notifications, and authorized demo-account gating.
+- [x] **AOSSIE identity and visual language:** The product is positioned as an AOSSIE community operations tool and uses GitHub-dark, Discord blurple, AOSSIE green, gold, system UI, and monospace audit styling.
+- [x] **Discord-first operator flow:** The console shows AOSSIE channels and threads, lets an operator select a contributor question, inspect its repository route and source docs, draft a reply, escalate to a mentor, or log a documentation gap.
+- [x] **Repository-aware answers:** Thread context shows repository name, route confidence, matched Markdown docs, and a source-backed answer shape instead of generic front-desk language.
+- [x] **AOSSIE project registry:** The Projects view presents representative public projects such as SkillBot, Gitcord, Resonate, OpenVerifiableLLM, BabyNest, and ThruBox with routing/indexing health.
+- [x] **Contributor identity flow:** The Contributors view shows verified and pending GitHub ↔ Discord links, roles, and recent activity, reflecting Gitcord’s identity-linking workflow.
+- [x] **Audit-first automation:** The Automation view exposes Read → Plan → Report → Apply, dry-run/observer/active modes, and a visible mutation gate that stays locked without permission configuration.
+- [x] **Audit and gap visibility:** The Audit view shows Markdown/JSON reports, sync history, and unanswered documentation gaps as first-class work rather than hidden logs.
+- [x] **Discord preview:** A Discord-facing preview demonstrates a cited answer and a clarifying question without claiming that a live AOSSIE server was changed.
+- [ ] **Production Discord/GitHub connectivity:** Add authorized AOSSIE bot credentials, server/channel permissions, GitHub scopes, verified identity linking, and real event ingestion.
+- [ ] **Local-first execution:** Add repository doc sync, Ollama or configured model calls, durable gap logs, scheduled refreshes, and safe write/apply workers behind the audit gate.

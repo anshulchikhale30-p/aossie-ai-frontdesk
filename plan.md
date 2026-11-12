@@ -1,46 +1,53 @@
-# AI Front Desk — implementation plan
+# AOSSIE Agent — implementation plan
 
-## Product slice
+## Product direction
 
-Build a polished, interactive demo of the AI Front Desk brief. The first slice is provider-facing and customer-facing in one web app so the core product rules are legible without real channel credentials: provider operations dashboard, inbox with human handoff, calendar and schedule-change alternatives, text-only knowledge, channel states, reminders, and a customer conversation preview.
+Rebuild the generic AI Front Desk into an AOSSIE-focused Discord agent console. AOSSIE is an Australian open-source umbrella organization with a broad project portfolio, GSoC/community programs, and a public Discord. The product slice should feel like an internal community operations tool for maintainers and mentors, not a service-business appointment dashboard.
 
-The demo uses local in-memory state in React. It does not claim to connect WhatsApp, Telegram, Discord, calendars, or a managed database yet. The architecture keeps those boundaries visible so the later server-backed implementation can replace mock data without redesigning the interaction model.
+The demo centers on the actual AOSSIE-adjacent workflow described by SkillBot and Gitcord: contributors ask repository questions in Discord; the agent routes a question to the right project and relevant Markdown docs; maintainers review audit-friendly answers; GitHub and Discord activity can be synchronized through deterministic, permission-aware plans; and gaps become a visible backlog for documentation work.
 
-## Implementation approach
+This is still a UI/demo slice. It uses local in-memory data and does not claim live access to the AOSSIE Discord server, GitHub tokens, Ollama, or local repositories. Real credentials, bot permissions, identity linking, and mutation execution remain production seams.
 
-- React + TypeScript + Wouter starter, with Lucide icons and Tailwind-compatible utility classes.
-- One `Home` page that owns demo state and swaps between Overview, Inbox, Calendar, Knowledge, Channels, Settings, and Customer view.
-- Reusable visual primitives inside the page for KPI cards, avatar initials, status pills, conversation rows, message bubbles, schedule cards, and overlays.
-- No decorative image assets: this is an operational product where visual hierarchy, information density, and clear states are more useful than illustration.
-- The app is responsive: the provider console collapses to a compact rail on narrow screens; the customer preview becomes a full-width mobile chat surface.
-- `public/manus-routes.json` declares the single-page route for Preview/crawlers.
+## Information architecture
+
+- **Overview:** Community control room with unanswered Discord threads, project routing health, contributor pulse, and safe-mode status.
+- **Discord inbox:** Channel/thread view for #gsoc-2026, #landing-pages, #skillbot, and #general. Each thread shows the repository route, source docs, confidence, and a reply/escalate/log-gap workflow.
+- **Projects:** AOSSIE project registry with repository language, indexed docs, question volume, and routing health.
+- **Contributors:** Verified/pending GitHub ↔ Discord identity links, roles, and recent activity.
+- **Automation:** Read → Plan → Report → Apply pipeline with dry-run, observer, and active modes. Apply stays locked until permissions are configured.
+- **Audit log:** Markdown/JSON audit reports, gaps, plan summaries, and explicit mutation status.
+- **Discord preview:** A customer-facing view becomes a realistic Discord thread preview showing how the agent answers with source citations and asks clarifying questions.
+
+## Interaction model
+
+The operator can select a thread, inspect the route and docs used, ask the agent to draft an answer, send a local reply into the mock thread, escalate to a mentor, or log a documentation gap. The UI makes “dry-run” the safe default and shows why a mutation is blocked. The Discord preview lets the user choose a repository question and see the answer shape without pretending that it was sent to a live server.
 
 ## Design direction
 
-Three possible directions were considered: “warm editorial clinic” (0.06), “soft SaaS dashboard” (0.28), and “quiet operations studio” (0.66). The selected direction is **quiet operations studio**.
+Three possible directions were considered: “open-source command center” (0.64), “Discord-native community lounge” (0.19), and “lightweight maintainer CRM” (0.07). The selected direction is **open-source command center**.
 
-- **Design movement:** editorial operations software with restrained Swiss typography and a calm hospitality palette.
-- **Core principles:** status before decoration; clear next action; human judgment is visible; dense data still feels breathable.
-- **Color philosophy:** deep ink/navy grounds the workspace, warm paper keeps content approachable, and a signature sea-glass green marks healthy automation. Amber is reserved for the moments that need staff attention.
-- **Layout paradigm:** a slim permanent navigation rail and offset work surfaces rather than centered marketing cards. Primary content is arranged as a left-to-right operational scan: signal, work queue, then schedule.
-- **Signature elements:** a vertical “live” rail accent, rounded status chips with small dot indicators, and appointment cards that read like physical desk slips.
-- **Interaction philosophy:** actions state their consequence. Schedule changes show choices; escalations show who owns the next step; a sent reply immediately appears in the thread.
-- **Animation:** use subtle 150–220ms fades and translate-y transitions for panels and status changes. Avoid bouncing or decorative motion in the console.
-- **Typography system:** Inter/system sans for all interface text with tight tracking for labels and generous line-height for message copy. Large metrics use a slightly condensed feel via font-weight and letter-spacing, not a second display face.
-- **Brand essence:** a dependable front desk for teams who want the calm of automation without losing the human handoff. Personality: composed, attentive, pragmatic.
-- **Brand voice:** concise and reassuring. Example lines: “Nothing falls through the cracks.” “This needs your judgment — the customer is already in the loop.”
-- **Wordmark & logo:** a small doorway/relay mark made from two vertical strokes and a linking crossbar, paired with the `frontdesk` wordmark in lowercase.
-- **Signature brand color:** sea-glass `#66D5B0`.
+- **Design movement:** GitHub dark documentation chrome fused with Discord-native operational surfaces.
+- **Core principles:** audit before action; context over clutter; contributor-friendly language; reversible controls.
+- **Color philosophy:** GitHub dark grounds the workspace, Discord blurple marks Discord-facing actions, AOSSIE green marks synced/healthy state, and AOSSIE gold calls attention to mentorship, programs, and review gates.
+- **Layout paradigm:** fixed server rail + operational sidebar + wide workbench. Thread context sits beside the conversation instead of hiding behind modal CRUD.
+- **Signature elements:** a vertical Discord server rail, monospace routing/audit labels, and source chips that show exactly which repository docs informed an answer.
+- **Interaction philosophy:** every write is explicit. “Draft,” “report,” “apply,” and “log gap” are different actions with different evidence and permission states.
+- **Animation:** subtle panel fade/slide for selection changes and a restrained pulse for healthy sync. No decorative motion in audit data.
+- **Typography system:** system UI for the product, monospace for repository names, commands, confidence, and audit output.
+- **Brand essence:** a calm, reviewable bridge between AOSSIE’s codebases and its Discord community. Personality: transparent, mentor-friendly, practical.
+- **Brand voice:** direct and welcoming. Example lines: “Answer from the repo, not from memory.” “Dry-run first. Apply only when the audit is understood.”
+- **Wordmark & mark:** AOSSIE wordmark with a small linked-node mark that suggests repository ↔ Discord routing.
+- **Signature brand color:** AOSSIE green `#228B22`, paired with Discord blurple `#5865F2` and AOSSIE gold `#FFC517`.
 
 ## Project structure
 
-- `client/src/pages/Home.tsx`: the interactive demo shell, mock domain state, view components, and local actions.
-- `client/src/index.css`: the visual system, responsive layout, status treatments, and small interaction animations.
+- `client/src/pages/Home.tsx`: AOSSIE operator console, Discord preview, local domain data, and demo interactions.
+- `client/src/index.css`: GitHub-dark/AOSSIE visual system, responsive layouts, status treatments, and audit surfaces.
 - `client/src/App.tsx`: route entry point.
-- `public/manus-routes.json`: page route manifest.
-- `app.config.ts`: project logo metadata.
-- `TODO.md`: outcome-oriented acceptance items for this slice and future production work.
+- `client/public/manus-routes.json`: root route manifest.
+- `app.config.ts`: AOSSIE/Gitcord-compatible project logo metadata.
+- `TODO.md`: delivered demo outcomes and production follow-ups.
 
-## Later production seams
+## Production seams
 
-The mock conversation list, appointments, knowledge entries, and channel states are intentionally shaped like domain objects. The next implementation pass can move them behind tRPC procedures and Drizzle tables, add provider authentication and verified customer identity, then add channel adapters and scheduled notifications without changing the primary user flows.
+The local arrays intentionally map to future domain records: guild/channel/thread/message, repository/doc index, contributor identity link, automation run, audit report, and gap log. The next production pass can add the official Discord adapter, GitHub/OAuth scopes, local-first sync workers, SQLite or managed database persistence, and real Ollama or built-in-model routing while preserving this information architecture.

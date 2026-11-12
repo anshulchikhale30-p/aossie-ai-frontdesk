@@ -1,5 +1,5 @@
 {
   "routes": [
-    { "path": "/", "title": "AI Front Desk" }
+    { "path": "/", "title": "AOSSIE Agent · Community Ops" }
   ]
 }
