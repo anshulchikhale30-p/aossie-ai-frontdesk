@@ -15,6 +15,24 @@ async function startServer() {
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   app.get("/api/health", (_req, res) => res.json({ status: "ok" }));
+  app.get("/api/frontdesk", async (_req, res) => {
+    const agentUrl = process.env.AGENT_API_URL?.replace(/\/$/, "");
+    if (!agentUrl) {
+      res.status(503).json({ live: false, reason: "AGENT_API_URL is not configured" });
+      return;
+    }
+    try {
+      const response = await fetch(`${agentUrl}/api/frontdesk`, {
+        headers: process.env.AGENT_API_TOKEN ? { Authorization: `Bearer ${process.env.AGENT_API_TOKEN}` } : {},
+        signal: AbortSignal.timeout(5000),
+      });
+      const payload = await response.json();
+      res.status(response.status).json(payload);
+    } catch (error) {
+      console.error("Agent API proxy failed:", error instanceof Error ? error.message : error);
+      res.status(502).json({ live: false, reason: "Agent API is unreachable" });
+    }
+  });
   app.get("/api/platform/config.js", (_req, res) => {
     res.set("Cache-Control", "no-store").type("application/javascript").send(publicPlatformScript());
   });
